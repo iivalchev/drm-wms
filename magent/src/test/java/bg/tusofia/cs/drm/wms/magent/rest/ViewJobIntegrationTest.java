@@ -55,7 +55,7 @@ public class ViewJobIntegrationTest {
         mockMvc.perform(get("/job/{id}", String.valueOf(jobId))
                 .accept(MediaType.APPLICATION_JSON))
                .andDo(print())
-               .andExpect(status().isNotFound());
+               .andExpect(status().isNotFound()).andReturn();
     }
 
     @Test

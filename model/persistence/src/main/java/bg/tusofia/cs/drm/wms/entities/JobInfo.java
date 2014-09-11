@@ -3,6 +3,7 @@ package bg.tusofia.cs.drm.wms.entities;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import java.util.Map;
 
 /**
@@ -13,13 +14,13 @@ public class JobInfo {
     @Column(nullable = true)
     private JobState jobState;
     @Column(nullable = true)
-    private boolean hasCoreDump;
+    private Boolean hasCoreDump;
     @Column(nullable = true)
-    private int exitStatus;
+    private Integer exitStatus;
     @Column(nullable = true)
     private String terminationSignal;
     @Column(nullable = true)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> resourceUsage;
 
     public JobState getJobState() {
@@ -30,19 +31,19 @@ public class JobInfo {
         this.jobState = jobState;
     }
 
-    public boolean isHasCoreDump() {
+    public Boolean isHasCoreDump() {
         return hasCoreDump;
     }
 
-    public void setHasCoreDump(boolean hasCoreDump) {
+    public void setHasCoreDump(Boolean hasCoreDump) {
         this.hasCoreDump = hasCoreDump;
     }
 
-    public int getExitStatus() {
+    public Integer getExitStatus() {
         return exitStatus;
     }
 
-    public void setExitStatus(int exitStatus) {
+    public void setExitStatus(Integer exitStatus) {
         this.exitStatus = exitStatus;
     }
 

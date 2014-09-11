@@ -1,7 +1,10 @@
 package bg.tusofia.cs.drm.wms.spring.configuration;
 
+import bg.tusofia.cs.drm.wms.entities.EntitiesComponetns;
+import bg.tusofia.cs.drm.wms.repositories.RepositoryComponents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate4.HibernateExceptionTranslator;
@@ -18,7 +21,7 @@ import javax.sql.DataSource;
  * Created by Ivan on 9/7/2014.
  */
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackageClasses = {RepositoryComponents.class})
 @EnableTransactionManagement
 public class PersistenceConfig {
 

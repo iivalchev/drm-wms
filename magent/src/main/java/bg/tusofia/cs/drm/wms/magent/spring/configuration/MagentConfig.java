@@ -5,12 +5,14 @@ import bg.tusofia.cs.drm.wms.magent.rest.RestComponents;
 import bg.tusofia.cs.drm.wms.magent.rest.assemblers.ResourceAssemblersFactory;
 import bg.tusofia.cs.drm.wms.magent.service.JobService;
 import bg.tusofia.cs.drm.wms.magent.service.SlurmJobService;
+import bg.tusofia.cs.drm.wms.repositories.RepositoryComponents;
 import bg.tusofia.cs.drm.wms.spring.configuration.PersistenceConfig;
 import org.ggf.drmaa.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -23,8 +25,12 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackageClasses = {RestComponents.class})
-@Import({PersistenceConfig.class})
+//@Import({PersistenceConfig.class})
 public class MagentConfig {
+
+    static {
+        System.setProperty("org.ggf.drmaa.SessionFactory", "bg.tusofia.cs.drmaa.SessionFactory");
+    }
 
     @Bean
     public DataSource dataSource() {

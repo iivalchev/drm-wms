@@ -1,11 +1,14 @@
 package bg.tusofia.cs.drm.wms.magent.rest.assemblers;
 
 import bg.tusofia.cs.drm.wms.entities.Job;
+import bg.tusofia.cs.drm.wms.magent.rest.JobCommandsController;
 import bg.tusofia.cs.drm.wms.resources.JobAllocation;
 import bg.tusofia.cs.drm.wms.resources.JobInfo;
 import bg.tusofia.cs.drm.wms.resources.JobResource;
 import bg.tusofia.cs.drm.wms.resources.JobState;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  * Created by Ivan on 9/1/2014.
@@ -24,6 +27,7 @@ public class JobResourceAssembler extends ResourceAssemblerSupport<Job, JobResou
     @Override
     public JobResource toResource(Job job) {
         JobResource jobResource = createResourceWithId(job.getId(), job);
+        jobResource.setJobId(job.getId());
         jobResource.setUserId(job.getUserId());
         jobResource.setName(job.getName());
         jobResource.setCommand(job.getCommand());
@@ -50,16 +54,19 @@ public class JobResourceAssembler extends ResourceAssemblerSupport<Job, JobResou
                                                         .getJobState()
                                                         .name()));
             }
-            jobInfo.setHasCoreDump(job.getJobInfo()
-                                      .isHasCoreDump());
-            jobInfo.setExitStatus(job.getJobInfo()
-                                     .getExitStatus());
+            Boolean hasCoreDump = job.getJobInfo()
+                                     .isHasCoreDump();
+            jobInfo.setHasCoreDump(hasCoreDump!=null?hasCoreDump:false);
+            Integer exitStatus = job.getJobInfo()
+                                    .getExitStatus();
+            jobInfo.setExitStatus(exitStatus!=null?exitStatus:0);
             jobInfo.setTerminationSignal(job.getJobInfo()
                                             .getTerminationSignal());
             jobInfo.setResourceUsage(job.getJobInfo()
                                         .getResourceUsage());
             jobResource.setJobInfo(jobInfo);
         }
+        jobResource.add(linkTo(JobCommandsController.class).slash("run").slash(job.getId()).withRel("run"));
         return jobResource;
     }
 }

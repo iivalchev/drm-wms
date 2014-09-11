@@ -94,6 +94,7 @@ public class JobResourceAssemblerTest {
         JobResource jobResource = jobResourceHolder.instance;
 
         assertThat(jobResource, notNullValue());
+        assertThat(jobResource.getJobId(), is(job.getId()));
         assertThat(jobResource.getLink("self")
                               .getHref(), is("http://localhost/job/" + job.getId()));
         assertThat(jobResource.getUserId(), is(job.getUserId()));

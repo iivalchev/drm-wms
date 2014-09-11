@@ -19,6 +19,7 @@ import java.util.Collection;
 /**
  * Created by Ivan on 6/17/2014.
  */
+@Controller
 public class JobQueriesController extends AbstractJobController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")

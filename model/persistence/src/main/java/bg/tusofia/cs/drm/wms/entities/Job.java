@@ -25,10 +25,10 @@ public class Job extends BaseEntity {
     @Column(nullable = true)
     private String errorPath;
     @Column(nullable = true)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> args;
     @Column(nullable = true)
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> envVars;
     @Column(nullable = true)
     private String workingDirectory;
@@ -38,7 +38,7 @@ public class Job extends BaseEntity {
     private JobAllocation jobAllocation;
     @Embedded
     private JobInfo jobInfo;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<JobTask> tasks;
 
     public String getUserId() {

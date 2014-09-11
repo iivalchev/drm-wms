@@ -8,6 +8,7 @@ import bg.tusofia.cs.drm.wms.entities.JobState;
 import bg.tusofia.cs.drm.wms.magent.domain.events.*;
 import bg.tusofia.cs.drm.wms.magent.domain.exceptions.JobNotFoundException;
 import bg.tusofia.cs.drm.wms.magent.domain.exceptions.JobServiceException;
+import bg.tusofia.cs.drm.wms.magent.rest.JobQueriesController;
 import bg.tusofia.cs.drm.wms.magent.rest.assemblers.ResourceAssemblersFactory;
 import bg.tusofia.cs.drm.wms.repositories.JobRepository;
 import bg.tusofia.cs.drm.wms.resources.JobResource;
@@ -32,11 +33,10 @@ public class SlurmJobService implements JobService {
 
     @Override
     public JobResourceEvent requestJobResource(RequestJobResourceEvent event) {
-        //ask DRMAA for the result if not already set of the job execution with no waiting timeout
-        Session session = drmaaSessionHolder.getSession();
         try {
             Job job = jobRepository.findOne(event.getJobId());
             if (job.getJobInfo() == null) {
+                Session session = drmaaSessionHolder.getSession();
                 JobInfo jobInfo = session.wait(job.getDrmId(), Session.TIMEOUT_NO_WAIT);
                 if (jobInfo != null) {
                     //job has finished execution
@@ -96,12 +96,12 @@ public class SlurmJobService implements JobService {
             JobTemplate jt = new JobTemplateBuilder(session.createJobTemplate())
                     .jobName(job.getName())
                     .remoteCommand(job.getCommand())
-                    .inputPath(job.getInputPath())
+//                    .inputPath(job.getInputPath())
                     .outputPath(job.getOutputPath())
-                    .errorPath(job.getErrorPath())
-                    .args(job.getArgs())
-                    .jobEnvironment(job.getEnvVars())
-                    .workingDirectory(job.getWorkingDirectory())
+//                    .errorPath(job.getErrorPath())
+//                    .args(job.getArgs())
+//                    .jobEnvironment(job.getEnvVars())
+//                    .workingDirectory(job.getWorkingDirectory())
                     .nativeSpecification(job.getJobAllocation() != null ? String.format("-N %d", job.getJobAllocation()
                                                                                                     .getNodes()) : "")
                     .build();
@@ -109,9 +109,9 @@ public class SlurmJobService implements JobService {
         } catch (DrmaaException e) {
             throw new JobServiceException(e);
         }
-        jobRepository.save(job);
+        job = jobRepository.save(job);
         //TODO fix task resources
-        return new JobRunEvent(new JobTaskResource());
+        return new JobRunEvent(new JobTaskResource(job.getId(), JobQueriesController.class));
     }
 
     public static class DrmaaSessionHolder {
